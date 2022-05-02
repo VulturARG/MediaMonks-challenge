@@ -1,36 +1,95 @@
-### Python coding challenge
+# MediaMonks challenge
 
-This exercise is not related to web development. This is on purpose because frameworks like Django and Flask
-dictate a common way of working. For this reason we use this test to see more generic programming skills
-and creativity.
+## Challenge description
+The requirements of the challenge are found in the document [challenge_description.md](./documentation/challenge_description.md).
 
-### Exercise
+## Installation
 
-Create a commandline script that applies 1 or more filters to an image and saves it as a new file. 
+```bash
+Uncompres the files or:
 
-The filters should be:
+git clone https://github.com/VulturARG/MediaMonks-challenge.git
+cd MediaMonks-challenge
+git checkout add_filters
 
-1. `gray_scale` convert the image to black and white.
-2. `overlay` overlay a given image on top of the source.
-3. `rotate` rotate N degrees. (no need for resizing/cropping)
-4. Optionally, make up your own filter. Not required.
+# Virtualenv instalación (Linux)
+virtualenv venv
+source venv/bin/activate
 
-Other requirements:
+# Virtualenv instalación (Windows)
+virtualenv venv
+.\venv\Scripts\activate
 
-* All parameters should be given in one line. (no interactive approach using `input()`)
-* Each filter should be optional. 
-* The order of filters is important since we want to be able to control if the overlay will become black and white or not. 
-* The source image should be given as a filename on the command line.
-* The overlay image should also be given as a filename on the command line and should be a transparent png.
-* The number of degrees should be given on the command line.
-* The output file should be given as a filename on the command line. (Support saving as png and jpg)
-* Allow applying a filter more than once. (for example: gray_scale > rotate > overlay > rotate)
-* Think about extensibility. How can you make it easy (for future you) to allow adding a new filter without changing a lot of code.
-* Add unittests to test individual components of your program. Add instructions on how to run the tests.
-* Follow PEP8 guidelines.
+pip3 install -r requirements.txt
+```
+## Running the application
 
-Images input.jpg and overlay.png are provided to save you a little time.
+```bash
+python filters.py -h
+python filters.py --help
 
-Provide a zip file with the script and a README with instructions on how to use it.
-Also include how much time you spent on it.
+python filters.py input.jpg --grayscale output.jpg
+python filters.py input.jpg --rotate -10 output.jpg
+python filters.py input.jpg --overlay file.png output.jpg
+python filters.py input.jpg --sepia output.jpg
 
+python filters.py input.jpg --grayscale --rotate -10 --overlay file.png --rotate 50 output.jpg
+```
+
+## Running the tests
+
+```bash
+python -m unittest
+```
+
+## Check test coverage
+
+### Run test suite with coverage:
+
+```bash
+coverage run -m unittest
+```
+
+### Report on the results:
+
+```bash
+coverage report
+```
+
+### HTML Report:
+
+```bash
+coverage html
+```
+See the report in: `htmlcov/index.html`
+
+## Add a new filter
+
+To add a new filter, add a file in the filters folder, e.g: `new_filter.py`. 
+In this file create a new class that inherits from Filter(ABC) (e.g: `NewFilter(Filter)`)
+The new filter will be automatically added to the rest of the filters and the help message will show the new filter.
+
+```python
+from PIL import Image
+
+from domain.filters import Filter
+
+
+class NewFilter(Filter):
+    """Add a New Filter."""
+
+    ARGUMENTS = 1  # Number of arguments for the filter
+    HELP = "Help"  # Help message for the filter
+
+    def transform(self, image: Image, *args, **kwargs) -> Image:
+        """Apply filter."""
+
+        # Filter code here
+        return image
+
+    @classmethod
+    def build_filter(cls) -> Filter:
+        """Build the filter."""
+
+        return cls()
+```
