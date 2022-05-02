@@ -1,0 +1,27 @@
+{
+  "name": "media_monks_challege",
+  "version": "1.0.0",
+  "description": "See README",
+  "main": "index.js",
+  "scripts": {
+    "code-lint-staged": "cd ../ && lint-staged -c pre-commit/lint-staged.config.js",
+    "flake8-check": "cd ../ && diff-quality --ignore-unstaged --violations=flake8 --fail-under=100 --compare-branch=HEAD",
+    "pydocstyle-check": "cd ../ && diff-quality --ignore-unstaged --violations=pydocstyle --fail-under=100 --compare-branch=HEAD",
+    "code-diff-quality": "yarn flake8-check && yarn pydocstyle-check",
+    "install-dependencies": "yarn --frozen-lockfile --network-timeout 600000",
+    "precommit": "yarn install-dependencies && yarn code-lint-staged && yarn code-diff-quality"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VulturARG/MediaMonks-challenge.git"
+  },
+  "keywords": [],
+  "author": "LB",
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/VulturARG/MediaMonks-challenge#readme",
+  "devDependencies": {
+    "husky": "^0.14.3",
+    "lerna": "3.16.4",
+    "lint-staged": "^7.2.0"
+  }
+}
